@@ -28,7 +28,9 @@ if hash keychain 2> /dev/null; then
     else
         GUI_ARG=""
     fi
-    keychain $HOME/.ssh/id_rsa $DEFAULT_PGP_KEY $GUI_ARG
+    #keychain $HOME/.ssh/id_rsa $DEFAULT_PGP_KEY $GUI_ARG
+    # having problems with key loading so commenting this out for now
+    keychain
     source $HOME/.keychain/$HOSTNAME-sh
     source $HOME/.keychain/$HOSTNAME-sh-gpg
 
