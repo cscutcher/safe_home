@@ -18,7 +18,7 @@
     new-workdir = git-new-workdir
     reset-author = commit --amend --reset-author
     verify-commit-sig = log -1 --pretty="%G?"
-    recommit = commit --ammend --no-edit
+    recommit = commit --amend --no-edit
 
 
 [color]
