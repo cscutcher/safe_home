@@ -38,3 +38,7 @@ if hash keychain 2> /dev/null; then
 else
     log "Unable to load a keyring!"
 fi
+
+if ( ! ssh-add -l | grep -q .ssh/id_rsa ) ; then
+    ssh-add ~/.ssh/id_rsa
+fi

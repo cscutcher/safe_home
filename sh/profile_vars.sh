@@ -39,33 +39,6 @@ if [ $DROPBOX ] ; then
     fi
 fi
 
-# Discover upstart stuff
-which initctl > /dev/null
-if [ $? -eq 0 ]; then
-    NUM_SESSIONS=$(initctl list-sessions | wc -l)
-    if [ $NUM_SESSIONS -eq 0 ]; then
-        log "Starting user upstart session"
-        nohup init --user --confdir=$HOME/.config/upstart_local > $HOME/.user_upstart_log &
-    fi
-
-    for i in `seq 1 10`; do
-        NUM_SESSIONS=$(initctl list-sessions | wc -l)
-        if [ $NUM_SESSIONS -eq 1 ]; then
-            break
-        fi
-        sleep 0.5
-    done
-
-    if [ $NUM_SESSIONS -eq 1 ]; then
-        export UPSTART_SESSION=$(initctl list-sessions | sed -re 's/^[[:digit:]]+ //')
-        log "Attaching to upstart session: $UPSTART_SESSION"
-    else
-        log_error "Unexpected number of upstart sessions"
-    fi
-else
-    log_error "Unable to discover upstart sessions"
-fi
-
 # Virtualenv workon home
 export WORKON_HOME=$HOME/.virtualenvs
 
