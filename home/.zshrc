@@ -69,6 +69,7 @@ plugins=(
     fabric
     debian
     docker
+    keychain
     homeshick
     command-not-found
     common-aliases
@@ -79,7 +80,6 @@ plugins=(
     mosh
     colorize # Syntax highlighting type cat
     askpass
-    keychain
 )
 
 # User configuration
