@@ -80,6 +80,7 @@ plugins=(
     mosh
     colorize # Syntax highlighting type cat
     askpass
+    git-config-d
 )
 
 # User configuration
