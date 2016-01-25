@@ -1,0 +1,10 @@
+[merge]
+    tool = vimdiff
+
+[difftool]
+    tool = vimdiff
+    prompt = false
+[diff]
+    renamelimit = 1000
+[push]
+	default = tracking

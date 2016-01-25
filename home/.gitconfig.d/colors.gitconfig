@@ -1,0 +1,23 @@
+[color]
+	diff = auto
+	status = auto
+	branch = auto
+	ui = auto
+[color "diff"]
+  plain = normal
+  meta = bold green
+  frag = bold yellow
+  old = bold red
+  new = bold cyan
+  commit = yellow
+  whitespace = normal
+[color "branch"]
+  current = bold green
+  remote = bold red
+[color "status"]
+  header = normal
+  added = bold green
+  updated = bold cyan
+  changed = bold yellow
+  untracked = bold red
+  nobranch = bold yellow

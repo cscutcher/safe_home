@@ -8,42 +8,6 @@
 	main-window-view = HistoryView
 	file-view-vpane-position = 961
 
-[color]
-	diff = auto
-	status = auto
-	branch = auto
-	ui = auto
-[color "diff"]
-  plain = normal
-  meta = bold green
-  frag = bold yellow
-  old = bold red
-  new = bold cyan
-  commit = yellow
-  whitespace = normal
-[color "branch"]
-  current = bold green
-  remote = bold red
-[color "status"]
-  header = normal
-  added = bold green
-  updated = bold cyan
-  changed = bold yellow
-  untracked = bold red
-  nobranch = bold yellow
-
-[merge]
-    tool = vimdiff
-
-[difftool]
-    tool = vimdiff
-    prompt = false
-[diff]
-    renamelimit = 1000
-[push]
-	default = tracking
-[url "git@lys-git.cisco.com"]
-	insteadOf = git@git.rd.tandberg.com
 [core]
 	excludesfile = /home/cscutcher/.gitignore_global
 
