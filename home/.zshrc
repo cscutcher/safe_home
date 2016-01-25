@@ -86,6 +86,13 @@ plugins=(
 export PATH=$HOME/bin:/usr/local/bin:$PATH
 # export MANPATH="/usr/local/man:$MANPATH"
 
+
+log "Looking for pre ohmyzsh scripts"
+for f in $ZSH_CUSTOM/pre_ohmyzsh/**/*.zsh(N); do
+    log "     Sourcing $f"
+    source "$f"
+done
+
 source $ZSH/oh-my-zsh.sh
 
 # Aliases shared with bash
