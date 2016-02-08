@@ -51,7 +51,7 @@ COMPLETION_WAITING_DOTS="true"
 HIST_STAMPS="yyyy-mm-dd"
 
 # Would you like to use another custom folder than $ZSH/custom?
-ZSH_CUSTOM=$HOMESICK_REPOS/safe_home/zsh_custom
+ZSH_CUSTOM=$HOME/.zsh_custom
 
 # Disable auto venc on cd
 DISABLE_VENV_CD=1
@@ -80,11 +80,19 @@ plugins=(
     mosh
     colorize # Syntax highlighting type cat
     askpass
+    git-config-d
 )
 
 # User configuration
 export PATH=$HOME/bin:/usr/local/bin:$PATH
 # export MANPATH="/usr/local/man:$MANPATH"
+
+
+log "Looking for pre ohmyzsh scripts"
+for f in $ZSH_CUSTOM/pre_ohmyzsh/**/*.zsh(N); do
+    log "     Sourcing $f"
+    source "$f"
+done
 
 source $ZSH/oh-my-zsh.sh
 

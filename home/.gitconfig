@@ -8,55 +8,8 @@
 	main-window-view = HistoryView
 	file-view-vpane-position = 961
 
-[alias]
-	stat = diff --stat
-	ci = commit
-	co = checkout
-    cherrypick = cherry-pick
-    cp = cherry-pick
-	lg = log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit --date=relative
-    new-workdir = git-new-workdir
-    reset-author = commit --amend --reset-author
-    verify-commit-sig = log -1 --pretty="%G?"
-    recommit = commit --amend --no-edit
-    prstash = "!f() { git fetch $1 refs/pull-requests/$2/from:$3; } ; f"
-
-
-[color]
-	diff = auto
-	status = auto
-	branch = auto
-	ui = auto
-[color "diff"]
-  plain = normal
-  meta = bold green
-  frag = bold yellow
-  old = bold red
-  new = bold cyan
-  commit = yellow
-  whitespace = normal
-[color "branch"]
-  current = bold green
-  remote = bold red
-[color "status"]
-  header = normal
-  added = bold green
-  updated = bold cyan
-  changed = bold yellow
-  untracked = bold red
-  nobranch = bold yellow
-
-[merge]
-    tool = vimdiff
-
-[difftool]
-    tool = vimdiff
-    prompt = false
-[diff]
-    renamelimit = 1000
-[push]
-	default = tracking
-[url "git@lys-git.cisco.com"]
-	insteadOf = git@git.rd.tandberg.com
 [core]
 	excludesfile = /home/cscutcher/.gitignore_global
+
+[include]
+	path = ~/.gitconfig.d.include
