@@ -12,3 +12,8 @@ alias fgrep='fgrep --color=auto'
 alias egrep='egrep --color=auto'
 
 alias oct_perms='stat -c "%a %n"'
+
+# Use nvim if available
+if command -v nvim > /dev/null 2>&1; then
+    alias vim='nvim'
+fi
