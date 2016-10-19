@@ -1,40 +1,51 @@
-function gpg_key_good {
-    if gpg --list-secret-keys 2> /dev/null | grep $DEFAULT_PGP_KEY &>/dev/null
-    then
-        log "GPG key $DEFAULT_PGP_KEY installed"
-
-        if ! pgrep gpg-agent &> /dev/null; then
-            log "! NO GPG AGENT !"
-            return 1
-        fi
-
-        # Make sure key is ok
-        while ! echo "test" | gpg -u $DEFAULT_PGP_KEY -s -q --batch --use-agent &> /dev/null;
-        do
-            log "GPG password bad"
-            echo "test" | gpg -u $DEFAULT_PGP_KEY -s --use-agent > /dev/null
-        done
+log "Checking GPG"
+if which gpg 2>&1 >/dev/null; then
+    log "Have GPG"
+    if gpg -K | grep -q "$DEFAULT_PGP_KEY"; then
+        log "Key installed"
+        GPG_ARGS="$DEFAULT_PGP_KEY"
+    else
+        log "GPG installed but no key setup."
+        GPG_ARGS=""
     fi
+else
+    log "GPG not installed!"
+    GPG_ARGS=""
+fi
 
-    return 0
-}
+log "Checking SSH key"
+if [ -e "$HOME/.ssh/id_rsa" ]; then
+    log "Found SSH key"
+    SSH_ARGS="$HOME/.ssh/id_rsa"
+else
+    SSH_ARGS=""
+fi
 
+if [ -n "$GPG_ARGS" ]; then
+    AGENTS="gpg,ssh"
+else
+    AGENTS="ssh"
+fi
+
+if [ -z "$DISPLAY" ]; then
+    GUI_ARG="--nogui"
+else
+    GUI_ARG=""
+fi
 
 log "Setting up a keyring/keychain"
 if hash keychain 2> /dev/null; then
-    log "Found keychain"
-    if [ -z "$DISPLAY" ]; then 
-        GUI_ARG="--nogui"
-    else
-        GUI_ARG=""
-    fi
-    #keychain $HOME/.ssh/id_rsa $DEFAULT_PGP_KEY $GUI_ARG
-    # having problems with key loading so commenting this out for now
-    keychain
-    source $HOME/.keychain/$HOSTNAME-sh
-    source $HOME/.keychain/$HOSTNAME-sh-gpg
+    log "Found keychain in path"
 
-    #gpg_key_good
+    keychain --agents $AGENTS $SSH_ARGS $GPG_ARGS $GUI_ARG
+
+    if [ -n "$SSH_ARGS" ]; then
+        source $HOME/.keychain/$HOSTNAME-sh
+    fi
+
+    if [ -n "$GPG_ARGS" ]; then
+        source $HOME/.keychain/$HOSTNAME-sh-gpg
+    fi
 else
     log "Unable to load a keyring!"
 fi
