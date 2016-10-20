@@ -1,16 +1,13 @@
 log "Checking GPG"
 if which gpg 2>&1 >/dev/null; then
     log "Have GPG"
-    if gpg -K | grep -q "$DEFAULT_PGP_KEY"; then
-        log "Key installed"
-        GPG_ARGS="$DEFAULT_PGP_KEY"
-    else
-        log "GPG installed but no key setup."
-        GPG_ARGS=""
-    fi
+    function gpg_activate_default_key(){
+        echo | gpg -s -u "$DEFAULT_PGP_KEY" >/dev/null
+    }
+    GPG_ENABLED=0
 else
     log "GPG not installed!"
-    GPG_ARGS=""
+    GPG_ENABLED=1
 fi
 
 log "Checking SSH key"
@@ -21,7 +18,7 @@ else
     SSH_ARGS=""
 fi
 
-if [ -n "$GPG_ARGS" ]; then
+if [ $GPG_ENABLED -eq 0 ]; then
     AGENTS="gpg,ssh"
 else
     AGENTS="ssh"
@@ -37,13 +34,13 @@ log "Setting up a keyring/keychain"
 if hash keychain 2> /dev/null; then
     log "Found keychain in path"
 
-    keychain --agents $AGENTS $SSH_ARGS $GPG_ARGS $GUI_ARG
+    keychain --agents $AGENTS $SSH_ARGS $GUI_ARG
 
     if [ -n "$SSH_ARGS" ]; then
         source $HOME/.keychain/$HOSTNAME-sh
     fi
 
-    if [ -n "$GPG_ARGS" ]; then
+    if [ $GPG_ENABLED -eq 0 ]; then
         source $HOME/.keychain/$HOSTNAME-sh-gpg
     fi
 else
