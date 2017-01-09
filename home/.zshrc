@@ -111,3 +111,7 @@ fi
 
 # Fuck
 alias fuck='eval $(thefuck $(fc -ln -1))'
+
+# Add ruby binaries to path
+export GEM_BIN_DIRS=(~/.gem/ruby/*/bin)
+export PATH="$PATH:${(j.:.)GEM_BIN_DIRS}"
