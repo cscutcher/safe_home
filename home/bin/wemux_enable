@@ -1,0 +1,31 @@
+#!/bin/bash
+set -o pipefail
+set -o errexit
+set -o nounset
+
+LPASS_NOTE_ID=17157789507816980
+
+AT_Q="z"
+USERNAME="$(lpass show --username $LPASS_NOTE_ID)"
+HOSTNAME="$(lpass show --field=Hostname $LPASS_NOTE_ID)"
+NEW_PASSWORD="$(pwgen 20 -y1)"
+
+sudo echo "Updating Password"
+echo ${USERNAME}:${NEW_PASSWORD} | sudo chpasswd
+echo $NEW_PASSWORD | lpass edit --non-interactive --password $LPASS_NOTE_ID
+
+echo "Password will expire in 10 minutes"
+
+# Remove any previously added login disables
+for i in `sudo atq -q $AT_Q | awk '{print $1}'`;do
+    sudo atrm -q $AT_Q $i;
+done
+
+sudo at -q $AT_Q now + 10 minutes <<EOF
+passwd -l $USERNAME
+EOF
+
+echo "Connect with;"
+echo "ssh -p2222 $USERNAME@$HOSTNAME"
+echo ""
+echo "Password is '$NEW_PASSWORD'"

@@ -1,0 +1,10 @@
+#!/bin/bash
+set -o pipefail
+set -o errexit
+set -o nounset
+
+LPASS_NOTE_ID=17157789507816980
+
+USERNAME="$(lpass show --username $LPASS_NOTE_ID)"
+
+sudo passwd -l "$USERNAME"
