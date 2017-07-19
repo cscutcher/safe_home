@@ -30,23 +30,27 @@ else
     GUI_ARG=""
 fi
 
-log "Setting up a keyring/keychain"
-if hash keychain 2> /dev/null; then
-    log "Found keychain in path"
+if [ -z ${SSH_AUTH_SOCK+x} ]; then
+    log "Setting up a keyring/keychain"
+    if hash keychain 2> /dev/null; then
+        log "Found keychain in path"
 
-    keychain --agents $AGENTS $SSH_ARGS $GUI_ARG
+        keychain --agents $AGENTS $SSH_ARGS $GUI_ARG
 
-    if [ -n "$SSH_ARGS" ]; then
-        source $HOME/.keychain/$HOSTNAME-sh
+        if [ -n "$SSH_ARGS" ]; then
+            source $HOME/.keychain/$HOSTNAME-sh
+        fi
+
+        if [ $GPG_ENABLED -eq 0 ]; then
+            source $HOME/.keychain/$HOSTNAME-sh-gpg
+        fi
+    else
+        log "Unable to load a keyring!"
     fi
 
-    if [ $GPG_ENABLED -eq 0 ]; then
-        source $HOME/.keychain/$HOSTNAME-sh-gpg
+    if ( ! ssh-add -l | grep -q .ssh/id_rsa ) ; then
+        ssh-add ~/.ssh/id_rsa
     fi
 else
-    log "Unable to load a keyring!"
-fi
-
-if ( ! ssh-add -l | grep -q .ssh/id_rsa ) ; then
-    ssh-add ~/.ssh/id_rsa
+    log "SSH_AUTH_SOCK already exists. Not starting keychain."
 fi
