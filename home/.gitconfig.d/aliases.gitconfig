@@ -10,3 +10,5 @@
     verify-commit-sig = log -1 --pretty="%G?"
     recommit = commit --amend --no-edit
     prstash = "!f() { git fetch $1 refs/pull-requests/$2/from:$3; } ; f"
+    find = "!f() { git ls-files | egrep \"$@\" ;}; f"
+    vim = "!f() { git ls-files | egrep \"$@\" | xargs -r nvim ;}; f"
