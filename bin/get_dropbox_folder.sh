@@ -54,7 +54,7 @@ function base64_decode {
 }
 
 function json_get_dropbox_folder {
-    python -c "import json; print json.load(file('$HOME/.dropbox/info.json'))['personal']['path']" 2> /dev/null
+    python -c "import json; print(json.load(open('$HOME/.dropbox/info.json'))['personal']['path'])" 2> /dev/null
     return $?
 }
 
