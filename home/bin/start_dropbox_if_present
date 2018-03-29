@@ -1,0 +1,18 @@
+#!/bin/bash
+set -o nounset
+set -o errexit
+set -o pipefail
+
+if [[ -d $DROPBOX ]]; then
+    echo "Dropbox folder exists"
+    if [ "$(ls -A $DROPBOX)" ]; then
+        echo "Dropbox folder isn't empty."
+        exec dropbox
+    else
+        echo "Dropbox empty"
+        exit 1
+    fi
+else
+    echo "Dropbox missing."
+    exit 2
+fi
