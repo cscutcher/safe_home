@@ -2,7 +2,7 @@ function interactive_output
 {
     if [[ $- =~ "i" ]]
     then
-        cat 
+        cat >> /dev/stderr
     else
         cat > /dev/null
     fi
