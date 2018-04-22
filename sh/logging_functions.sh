@@ -21,5 +21,8 @@ function log
 
 function log_error
 {
-    log "ERROR: $*" 1>&2
+    local RED='\033[0;31m'
+    local NO_COLOR='\033[0m'
+
+    log "${RED}ERROR: $*${NO_COLOR}"
 }
