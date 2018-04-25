@@ -48,8 +48,17 @@ function use_gpg_as_ssh_agent(){
 function start_gpg_agent(){
     # Start gpg agent and use for SSH agent
     log "Using GPG agent for SSH and GPG"
+
     if gpg_available; then
-        gpg-agent --enable-ssh-support
+
+        if [ -z "$DISPLAY" ]; then
+            GUI_ARG="--pinentry-program=/usr/bin/pinentry-curses"
+        else
+            GUI_ARG=""
+        fi
+        GPG_TTY=$(tty)
+        export GPG_TTY
+        gpg-agent --enable-ssh-support "$GUI_ARG"
         use_gpg_as_ssh_agent
         load_ssh_keys
     else
@@ -66,6 +75,8 @@ function start_keychain(){
 
     if gpg_available; then
         AGENTS="gpg"
+        GPG_TTY=$(tty)
+        export GPG_TTY
     else
         AGENTS="ssh"
     fi
