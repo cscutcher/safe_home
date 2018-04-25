@@ -33,7 +33,7 @@ function get_ssh_keys(){
 function load_ssh_keys(){
     # Load all known SSH keys
     for k in $(get_ssh_keys); do
-        ssh-add $k    
+        ssh-add $k
     done
 }
 
