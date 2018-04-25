@@ -1,10 +1,4 @@
 # NINEBYSIX customise bashrc
-if [ ! -e $HOME/.homesick/repos/safe_home/sh/profile_vars.sh ]; then
-    echo "ERROR NO PROFILE VARS: EXPECT CHAOS" 1>&2
-fi
-source $HOME/.homesick/repos/safe_home/sh/profile_vars.sh
-source $HOME_SH_LIBS/logging_functions.sh
-
 LOG_CONTEXT="zsh"
 log "Starting zshrc"
 

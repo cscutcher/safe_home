@@ -4,3 +4,14 @@ function_exists() {
 }
 
 trim() { echo $1; }
+
+# Append to paths
+appendpath () {
+    case ":$PATH:" in
+        *:"$1":*)
+            ;;
+        *)
+            PATH="${PATH:+$PATH:}$1"
+    esac
+}
+
