@@ -1,9 +1,10 @@
 # NINEBYSIX customise bashrc
-if [ ! -e $HOME/.homesick/repos/safe_home/sh/profile_vars.sh ]; then
-    echo "ERROR NO PROFILE VARS: EXPECT CHAOS" 1>&2
+HOMESHICK_MAIN_RC="$HOME/.homesick/repos/safe_home/sh/rc.sh"
+if [ -e $HOMESHICK_MAIN_RC ]; then
+    source $HOMESHICK_MAIN_RC
+else
+    echo "ERROR NO HOMESHICK PROFILE: EXPECT CHAOS" 1>&2
 fi
-source $HOME/.homesick/repos/safe_home/sh/profile_vars.sh
-source $HOME_SH_LIBS/logging_functions.sh
 
 LOG_CONTEXT="bashrc"
 log "Starting global bashrc"
@@ -224,8 +225,6 @@ _hfab()
 # Assign the auto-completion function _fab for our command fab.
 complete -F _fab fab
 complete -F _hfab hfab
-
-source $HOME_SH_LIBS/aliases.sh
 
 #Host specific configs
 HOST_BASHRC=$HOME/.bashrc.hosts.d/$HOSTNAME.bashrc

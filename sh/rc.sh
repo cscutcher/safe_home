@@ -1,18 +1,4 @@
-# Find main homeshick repo
-# Try and put ALL OTHER constants elsewhere
-export HOMESHICK_MAIN="$HOME/.homesick/repos/safe_home/"
-
-if [ ! -d $HOMESHICK_MAIN ]; then
-    echo "ERROR: MISSING HOMESHICK MAIN" 1>&2
-fi
-
-export HOMESHICK_MAIN_SH="${HOMESHICK_MAIN}sh/"
-
-if [ ! -d $HOMESHICK_MAIN_SH ]; then
-    echo "ERROR NO HOMESHICK SH: EXPECT CHAOS" 1>&2
-fi
-
-LOG_CONTEXT="profile"
+LOG_CONTEXT="rc"
 
 # Load logging helpers
 if [ -e $HOMESHICK_MAIN_SH/modules/logging_functions.sh ]; then
@@ -24,13 +10,7 @@ fi
 
 # Load other helpers
 for sh_module in \
-        vars \
         common_sh_functions \
-        dynamic_vars \
-        profile_d \
-        host_profiles \
-        local_profile \
-        bash \
         aliases \
     ; do
     sh_module_full="${HOMESHICK_MAIN_SH}modules/${sh_module}.sh"

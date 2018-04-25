@@ -1,4 +1,10 @@
-# NINEBYSIX customise bashrc
+HOMESHICK_MAIN_RC="$HOME/.homesick/repos/safe_home/sh/rc.sh"
+if [ -e $HOMESHICK_MAIN_RC ]; then
+    emulate sh -c 'source $HOMESHICK_MAIN_RC'
+else
+    echo "ERROR NO HOMESHICK PROFILE: EXPECT CHAOS" 1>&2
+fi
+
 LOG_CONTEXT="zsh"
 log "Starting zshrc"
 
@@ -81,7 +87,6 @@ plugins=(
 export PATH=$HOME/bin:/usr/local/bin:$PATH
 # export MANPATH="/usr/local/man:$MANPATH"
 
-
 log "Looking for pre ohmyzsh scripts"
 for f in $ZSH_CUSTOM/pre_ohmyzsh/**/*.zsh(N); do
     log "     Sourcing $f"
@@ -89,9 +94,6 @@ for f in $ZSH_CUSTOM/pre_ohmyzsh/**/*.zsh(N); do
 done
 
 source $ZSH/oh-my-zsh.sh
-
-# Aliases shared with bash
-source $HOME_SH_LIBS/aliases.sh
 
 # Is powerline installed
 export POWERLINE_DIR=$(python -c 'import powerline; import os.path; print(os.path.dirname(powerline.__file__))')
