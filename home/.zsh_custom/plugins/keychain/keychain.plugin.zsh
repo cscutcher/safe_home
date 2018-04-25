@@ -12,7 +12,7 @@ function gpg_available(){
 
 function gpg_unlock_default_key(){
     # Unlock the default key by encrypted an empty string.
-    if gpg_available; then
+    if ! gpg_available; then
         log_error "GPG was unavailable."
     fi
     echo | gpg -s -u "$DEFAULT_PGP_KEY" >/dev/null
