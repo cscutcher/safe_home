@@ -60,7 +60,6 @@ function start_gpg_agent(){
         export GPG_TTY
         gpg-agent --enable-ssh-support "$GUI_ARG"
         use_gpg_as_ssh_agent
-        load_ssh_keys
     else
         log_error "GPG not available."
         return 1
@@ -105,8 +104,6 @@ function start_keychain(){
     else
         log "Unable to load a keyring!"
     fi
-
-    load_ssh_keys
 }
 
 if [ -z ${SSH_AUTH_SOCK+x} ]; then
