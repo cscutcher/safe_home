@@ -1,6 +1,7 @@
 [user]
 	name = Chris Scutcher
 	signingkey = 7B8C6179AA1CD475
+
 [giggle]
 	main-window-maximized = true
 	main-window-geometry = 449x283+419+302
@@ -13,8 +14,10 @@
 
 [include]
 	path = ~/.gitconfig.d.include
+
 [merge]
-	renamelimit = 2000
+    renamelimit = 2000
+
 [filter "lfs"]
 	clean = git-lfs clean -- %f
 	smudge = git-lfs smudge -- %f
