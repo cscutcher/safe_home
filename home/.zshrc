@@ -9,7 +9,7 @@ LOG_CONTEXT="zsh"
 log "Starting zshrc"
 
 # Path to your oh-my-zsh installation.
-export ZSH=$HOMESICK_REPOS/oh-my-zsh
+export ZSH=$HOMESHICK_REPOS/oh-my-zsh
 
 
 # Set name of the theme to load.

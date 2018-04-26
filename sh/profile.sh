@@ -1,7 +1,7 @@
 # Find main homeshick repo
 # Try and put ALL OTHER constants elsewhere
-export HOMESICK_REPOS="$HOME/.homesick/repos/"
-export HOMESHICK_MAIN="${HOMESICK_REPOS}/safe_home/"
+export HOMESHICK_REPOS="$HOME/.homesick/repos/"
+export HOMESHICK_MAIN="${HOMESHICK_REPOS}/safe_home/"
 
 if [ ! -d $HOMESHICK_MAIN ]; then
     echo "ERROR: MISSING HOMESHICK MAIN" 1>&2

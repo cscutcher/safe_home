@@ -1,4 +1,4 @@
-HOMESHICK_REPO="$HOMESICK_REPOS/homeshick/"
+HOMESHICK_REPO="$HOMESHICK_REPOS/homeshick/"
 
 # Add functions
 source "$HOMESHICK_REPO/homeshick.sh"
