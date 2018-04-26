@@ -1,0 +1,6 @@
+#!/bin/bash
+# Script for testing color capability on terminal
+
+msgcat --color=test
+
+256colors2.pl

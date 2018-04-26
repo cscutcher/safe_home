@@ -1,0 +1,54 @@
+#!/usr/bin/python
+import optparse
+import sys
+import pysvn
+import subprocess
+
+def revision_callback(option, opt_str, value, parser):
+    revision = value.split(":",1)
+    revision = [int(r) for r in revision]
+    if len(revision)==1:
+        revision.append(None)
+    parser.values.revision = revision
+
+parser = optparse.OptionParser(description='Provide SVN diff of merge that includes added files')
+#parser.add_option('-r','--revision', dest='revision', metavar='N[:M]', action="callback", callback=revision_callback, type=str)
+
+parser.set_defaults(revision=[None,None], path=".")
+
+(options, args) = parser.parse_args()
+
+if len(args) > 0:
+    setattr(options, 'path', args[0])
+
+#Set up client
+client = pysvn.Client()
+info = client.info2(options.path)[0][1]
+
+
+#Get main diff
+diff = client.diff('/tmp/', options.path)
+
+#Get SVN stat
+stat = client.status(options.path)
+rediff_files = [change for change in stat \
+        if (change.is_copied and 
+            change.text_status == pysvn.wc_status_kind.added and 
+            change.entry.kind != pysvn.node_kind.dir)]
+
+rediff = [diff]
+for f in rediff_files:
+    data = { "filename" : f.path, "revision" : 0 }
+    file_diff_header = """
+Index: %(filename)s
+===================================================================
+--- %(filename)s        (revision %(revision)d)
++++ %(filename)s        (revision %(revision)d)
+""" % data
+
+    diff_process = subprocess.Popen(["diff","-u","/dev/null",f.path], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    (file_diff, file_diff_err) = diff_process.communicate()
+    file_diff="\n".join(file_diff.splitlines()[2:])
+    rediff.append(file_diff_header + file_diff)
+
+print "\n".join(rediff)

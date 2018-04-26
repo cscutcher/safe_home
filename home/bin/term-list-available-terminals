@@ -1,0 +1,3 @@
+#!/bin/bash
+# Script to list all available terminfo definitions on ubuntu box
+find $HOME/.terminfo /etc/terminfo /lib/terminfo/ /usr/share/terminfo -printf "%f\n" | sort -u
