@@ -1,3 +1,5 @@
 #!/bin/bash
 git config user.name "Chris Scutcher"
 git config user.email "cscutche@cisco.com"
+git config user.signingkey "7B8C6179AA1CD475"
+git config commit.gpgSign true
