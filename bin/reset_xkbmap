@@ -1,0 +1,5 @@
+#!/bin/bash
+set -o pipefail
+set -o errexit
+set -o nounset
+setxkbmap $(setxkbmap -query | grep "^layout:" | awk -F ": *" '{print $2}')
