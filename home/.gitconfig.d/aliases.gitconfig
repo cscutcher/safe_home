@@ -4,7 +4,7 @@
 	co = checkout
     cherrypick = cherry-pick
     cp = cherry-pick
-	lg = log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit --date=relative
+	lg = log --no-show-signature --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an [%G?]>%Creset' --abbrev-commit --date=relative
     new-workdir = git-new-workdir
     reset-author = commit --amend --reset-author --no-edit
     verify-commit-sig = log -1 --pretty="%G?"
