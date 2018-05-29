@@ -6,5 +6,5 @@ set -o pipefail
 DEVICE="$1"
 HOSTNAME="$(hostname)"
 
-IP_ADDRESS=$(nmcli -f IP4.ADDRESS d show $DEVICE | egrep -o "[0-9.]+/24$" | egrep -o "^[0-9.]+")
+IP_ADDRESS=$(nmcli -f IP4.ADDRESS d show $DEVICE | egrep -o "[0-9.]+/[0-9]*$" | egrep -o "^[0-9.]+")
 tmate show-messages | sed -e "s/$HOSTNAME/$IP_ADDRESS/g"
