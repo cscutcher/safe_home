@@ -58,9 +58,20 @@ function wemux_get_info(){
             ;;
     esac
 
+    local XCLIP=""
+    if [[ -z $DISPLAY ]]; then
+        XCLIP="cat"
+    else
+        XCLIP="xclip -sel clip -in"
+    fi
+
     (
     echo "Connect with;"
     echo "ssh -p2222 ${WEMUX_USERNAME}@${ADDRESS}"
     echo ""
-    echo "Password is '$WEMUX_PASSWORD'" ) | tee /dev/tty | xclip -sel clip -in
+    echo "Password is '$WEMUX_PASSWORD'"
+    echo ""
+    echo "Expect the following host keys;"
+    ssh-keyscan "$ADDRESS" 2>/dev/null
+    ) | tee /dev/tty | eval $XCLIP
 }
