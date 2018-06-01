@@ -75,3 +75,8 @@ function wemux_get_info(){
     ssh-keyscan "$ADDRESS" 2>/dev/null
     ) | tee /dev/tty | eval $XCLIP
 }
+
+function wemux_lockout(){
+    wemux_update_password
+    tmux lock-session
+}
