@@ -41,12 +41,12 @@ function wemux_get_info(){
         echo "Must specify a device"
         return 1
     fi
-    
+
     local WEMUX_USERNAME="$(wemux_get_username)"
     local WEMUX_PASSWORD="$(wemux_get_password)"
 
     local ADDRESS=""
-    case "$DEVICE" in 
+    case "$DEVICE" in
         ipv6)
             ADDRESS="$(ip -6 addr | egrep -o '2001:[a-f0-9:]*')"
             ;;
