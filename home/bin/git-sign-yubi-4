@@ -1,0 +1,3 @@
+#!/bin/bash
+git config user.signingkey "FE144FC20B55211C!"
+git config commit.gpgSign true
