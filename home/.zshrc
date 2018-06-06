@@ -81,6 +81,7 @@ plugins=(
     colorize # Syntax highlighting type cat
     askpass
     git-config-d
+    vi-mode
 )
 
 # User configuration
