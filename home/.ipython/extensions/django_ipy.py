@@ -9,9 +9,10 @@ from collections import Iterable
 import logging
 import json
 
-from django.db.models.query import QuerySet
-from django.db.models.base import ModelState
+from IPython.core import magic
 from django.core.serializers import serialize as django_serialize
+from django.db.models.base import ModelState
+from django.db.models.query import QuerySet
 import six
 
 DEV_LOGGER = logging.getLogger(__name__)
@@ -63,7 +64,7 @@ class DjangoDictSerializer(DjangoBaseSerializer):
         return [self(i) for i in inst]
 
 
-def dprint(inst, use_django_serializer=True):
+def _dprint(inst, use_django_serializer=True):
     '''
     Method that takes Django objects and containers of Django objects and
     serializes them to something that ipython can pretty print.
@@ -86,5 +87,14 @@ def dprint(inst, use_django_serializer=True):
     return cls()(inst)
 
 
+@magic.magics_class
+class DPrintMagic(magic.Magics):
+    @magic.line_magic
+    def dprint(self, line):
+        result = self.shell.ev(line)
+        return _dprint(result)
+
+
 def load_ipython_extension(ipython):
-    ipython.push({'dprint': dprint})
+    ipython.push({'dprint': _dprint})
+    ipython.register_magics(DPrintMagic)
