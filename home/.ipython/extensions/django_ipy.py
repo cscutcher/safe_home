@@ -2,17 +2,20 @@
 '''
 IPython Extension for Django helpers.
 '''
+from collections import Mapping
+from collections import Iterable
 import logging
 
 from IPython.lib.pretty import pretty
 from django.db.models.query import QuerySet
+import six
 
 DEV_LOGGER = logging.getLogger(__name__)
 
 
-def dprint(object, stream=None, indent=1, width=80, depth=None):
+def dprint(inst, stream=None, indent=1, width=80, depth=None):
     """
-    A small addition to pprint that converts any Django model objects to
+    A small addition to pprint that converts any Django model object to
     dictionaries so they print prettier.
 
     h3. Example usage
@@ -26,24 +29,23 @@ def dprint(object, stream=None, indent=1, width=80, depth=None):
           'slug': u'ben-welsh',
     """
     # Catch any singleton Django model object that might get passed in
-    if getattr(object, '__metaclass__', None):
-        if object.__metaclass__.__name__ == 'ModelBase':
+    if getattr(inst, '__metaclass__', None):
+        if inst.__metaclass__.__name__ == 'ModelBase':
             # Convert it to a dictionary
-            object = object.__dict__
+            inst = inst.__dict__
 
     # Catch any Django QuerySets that might get passed in
-    elif isinstance(object, QuerySet):
+    elif isinstance(inst, QuerySet):
         # Convert it to a list of dictionaries
-        object = [i.__dict__ for i in object]
-    else:
-        try:
-            it = iter(object)
-        except TypeError:
-            pass
-        else:
-            object = [i.__dict__ for i in it]
+        inst = [i.__dict__ for i in inst]
+    elif isinstance(inst, Mapping):
+        inst = {k: pretty(v) for k, v in six.iteritems(inst)}
+    elif isinstance(inst, six.string_types):
+        pass
+    elif isinstance(inst, Iterable):
+        inst = [pretty(i) for i in inst]
 
-    return pretty(object)
+    return pretty(inst)
 
 
 def load_ipython_extension(ipython):
