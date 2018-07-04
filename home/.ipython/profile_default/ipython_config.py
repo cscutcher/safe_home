@@ -32,7 +32,10 @@
 #c.InteractiveShellApp.exec_lines = []
 
 ## A list of dotted module names of IPython extensions to load.
-#c.InteractiveShellApp.extensions = []
+c.InteractiveShellApp.extensions = [
+    'ipy_reprrequests',
+    'ipy_django',
+]
 
 ## dotted module name of an IPython extension to load.
 #c.InteractiveShellApp.extra_extension = ''
@@ -292,7 +295,7 @@ c.TerminalInteractiveShell.editing_mode = 'vi'
 
 ## Enable vi (v) or Emacs (C-X C-E) shortcuts to open an external editor. This is
 #  in addition to the F2 binding, which is always enabled.
-#c.TerminalInteractiveShell.extra_open_editor_shortcuts = False
+c.TerminalInteractiveShell.extra_open_editor_shortcuts = True
 
 ## Provide an alternative handler to be called when the user presses Return. This
 #  is an advanced option intended for debugging, which may be changed or removed
