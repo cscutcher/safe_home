@@ -3,6 +3,8 @@
 Auto start logging.
 
 From https://github.com/ipython/ipython/wiki/Cookbook:-Dated-logging
+
+TODO: It might be possible to make this a proper IPython extension.
 '''
 from time import strftime
 import os.path

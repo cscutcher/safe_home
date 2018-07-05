@@ -1,6 +1,10 @@
 # -*- coding: utf-8 -*-
 '''
 IPython Extension for Django helpers.
+
+TODO: Make the `ipy_django` check for an existing custom `__str__` or
+      `__repr__` on models and use that if the users toggles an option.
+TODO: Make into proper python module.
 '''
 from __future__ import print_function
 import logging

@@ -3,6 +3,8 @@
 Useful output for requests.
 
 From: https://github.com/minrk/ipython_extensions/
+
+TODO: Make into proper python module.
 '''
 
 
