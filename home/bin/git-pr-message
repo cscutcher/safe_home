@@ -2,5 +2,12 @@
 set -o errexit
 set -o nounset
 set -o pipefail
-git fetch origin master
-git log --reverse --no-show-signature --pretty="format:# %s%n%h - %ae%n%n%b" HEAD ^FETCH_HEAD
+PR_OUTPUT="$(mktemp)"
+>&2 echo "Output to $PR_OUTPUT"
+git fetch origin master 1>&1
+
+git log --reverse --no-show-signature --pretty="format:# %s%n%h - %ae%n%n%b" \
+    HEAD ^FETCH_HEAD | tee $PR_OUTPUT
+if [ -z $DISPLAY ]; then
+    xclip -sel clip -in < $PR_OUTPUT
+fi
