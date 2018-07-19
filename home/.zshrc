@@ -99,8 +99,7 @@ source $ZSH/oh-my-zsh.sh
 # Is powerline installed
 export POWERLINE_DIR=$(python -c 'import powerline; import os.path; print(os.path.dirname(powerline.__file__))')
 if [[ $POWERLINE_DIR != "" ]]; then
-    log "Powerline installed"
-    powerline-daemon -q
+    log "Powerline installed at $POWERLINE_DIR"
     . $POWERLINE_DIR/bindings/zsh/powerline.zsh
 else
     log "Powerline not installed. Using fallback"
