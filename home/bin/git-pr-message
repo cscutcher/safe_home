@@ -1,2 +1,2 @@
 #!/bin/bash
-git log --no-show-signature --pretty="format:# %s%n%h - %ae%n%n%b" HEAD ^origin/master
+git log --reverse --no-show-signature --pretty="format:# %s%n%h - %ae%n%n%b" HEAD ^origin/master
