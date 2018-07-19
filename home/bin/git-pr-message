@@ -1,2 +1,6 @@
 #!/bin/bash
-git log --reverse --no-show-signature --pretty="format:# %s%n%h - %ae%n%n%b" HEAD ^origin/master
+set -o errexit
+set -o nounset
+set -o pipefail
+git fetch origin master
+git log --reverse --no-show-signature --pretty="format:# %s%n%h - %ae%n%n%b" HEAD ^FETCH_HEAD
