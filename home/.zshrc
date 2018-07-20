@@ -63,7 +63,6 @@ DISABLE_VENV_CD=1
 plugins=(
     fix_colors
     fix_keys
-    git
     git-extras
     pip
     fabric
