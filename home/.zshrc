@@ -81,6 +81,7 @@ plugins=(
     askpass
     git-config-d
     vi-mode
+    bgnotify # Notify when long running commands finish
 )
 
 # User configuration
