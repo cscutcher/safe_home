@@ -33,7 +33,7 @@ currentWindowId () {
 }
 
 bgnotify () { ## args: (title, subtitle)
-  if hash ntfy 2>/dev; then
+  if hash ntfy 2>/dev/null; then
     ntfy -t "$1" send "$2"
   elif hash terminal-notifier 2>/dev/null; then #osx
     [[ "$TERM_PROGRAM" == 'iTerm.app' ]] && term_id='com.googlecode.iterm2';
