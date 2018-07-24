@@ -56,6 +56,9 @@ ZSH_CUSTOM=$HOME/.zsh_custom
 # Disable auto venc on cd
 DISABLE_VENV_CD=1
 
+# Threshold to notify when command completes
+bgnotify_threshold=20
+
 # Which plugins would you like to load? (plugins can be found in ~/.oh-my-zsh/plugins/*)
 # Custom plugins may be added to ~/.oh-my-zsh/custom/plugins/
 # Example format: plugins=(rails git textmate ruby lighthouse)
