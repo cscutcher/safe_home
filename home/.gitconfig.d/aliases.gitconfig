@@ -1,6 +1,6 @@
 [alias]
 	stat = diff --stat
-	ci = commit
+	ci = commit -v
 	co = checkout
     cherrypick = cherry-pick
     cp = cherry-pick
