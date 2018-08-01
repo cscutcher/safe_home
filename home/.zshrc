@@ -85,6 +85,7 @@ plugins=(
     git-config-d
     vi-mode
     nx6_bgnotify # Notify when long running commands finish
+    pipenv # Pipenv auto completion
 )
 
 # User configuration
