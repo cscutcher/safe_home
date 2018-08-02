@@ -8,7 +8,7 @@ function wemux_get_username(){
 
 function wemux_update_password(){
     local WEMUX_USERNAME="$(wemux_get_username)"
-    local NEW_PASSWORD="$(pwgen 20 -y1)"
+    local NEW_PASSWORD="$(pwgen 20 -n1)"
 
     ( echo ${WEMUX_USERNAME}:${NEW_PASSWORD} | sudo chpasswd ) || \
         ( echo "Failed to update wemux password" ; return 1 )
