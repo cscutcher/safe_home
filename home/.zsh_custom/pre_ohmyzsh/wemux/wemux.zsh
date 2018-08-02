@@ -38,6 +38,7 @@ function wemux_enable(){
         killall --user $WEMUX_USERNAME; \
         sleep 1; \
         killall --signal KILL --user $WEMUX_USERNAME " &
+    tmux set -g lock-after-time 600
 }
 
 function wemux_status(){
@@ -67,6 +68,7 @@ function wemux_disable(){
     local WEMUX_USERNAME="$(wemux_get_username)"
     sudo passwd -l "$WEMUX_USERNAME"
     sudo killall --user="$WEMUX_USERNAME"
+    wemux_status && tmux set -g lock-after-time 0
 }
 
 function wemux_get_info(){
