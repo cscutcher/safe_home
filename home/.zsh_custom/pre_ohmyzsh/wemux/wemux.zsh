@@ -27,11 +27,46 @@ function wemux_get_password(){
 
 function wemux_enable(){
     wemux_update_password
+    local WEMUX_USERNAME="$(wemux_get_username)"
+    if [[ -z "$WEMUX_USERNAME" ]]; then
+        return 1
+    fi
+    nohup sudo -n bash -c "\
+        [[ -z "$WEMUX_USERNAME" ]] && exit 1; \
+        sleep 10; \
+        passwd -l $WEMUX_USERNAME; \
+        killall --user $WEMUX_USERNAME; \
+        sleep 1; \
+        killall --signal KILL --user $WEMUX_USERNAME " &
+}
+
+function wemux_status(){
+    local WEMUX_USERNAME="$(wemux_get_username)"
+    local ACCOUNT_LOCKED=1
+    local LOGGED_IN=1
+
+    if (sudo cat /etc/shadow | egrep -q "^$WEMUX_USERNAME:\!"); then
+        echo "Wemux account locked"
+        ACCOUNT_LOCKED=0
+    else
+        echo "Wemux account unlocked!"
+        ACCOUNT_LOCKED=1
+    fi
+
+    if (users | grep -q "$WEMUX_USERNAME"); then
+        echo "Wemux user logged in!"
+        LOGGED_IN=0
+    else
+        echo "Wemux user logged out."
+        LOGGED_IN=1
+    fi
+    return $(( ACCOUNT_LOCKED == 1 || LOGGED_IN == 0 ))
 }
 
 function wemux_disable(){
     local WEMUX_USERNAME="$(wemux_get_username)"
     sudo passwd -l "$WEMUX_USERNAME"
+    sudo killall --user="$WEMUX_USERNAME"
 }
 
 function wemux_get_info(){
