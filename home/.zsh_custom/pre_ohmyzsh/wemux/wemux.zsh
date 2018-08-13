@@ -33,7 +33,7 @@ function wemux_enable(){
     fi
     nohup sudo -n bash -c "\
         [[ -z "$WEMUX_USERNAME" ]] && exit 1; \
-        sleep 10; \
+        sleep 3600; \
         passwd -l $WEMUX_USERNAME; \
         killall --user $WEMUX_USERNAME; \
         sleep 1; \
