@@ -33,7 +33,6 @@ for sh_module in \
         local_profile \
         bash \
         aliases \
-        helper_functions \
     ; do
     sh_module_full="${HOMESHICK_MAIN_SH}modules/${sh_module}.sh"
     if [ -e $sh_module_full ]; then
