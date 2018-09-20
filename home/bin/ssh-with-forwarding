@@ -1,0 +1,28 @@
+#!/usr/bin/env bash
+set -o errexit
+set -o nounset
+set -o pipefail
+
+get_gpg_socket(){
+    SOCKET_NAME="$1"
+    gpgconf --list-dir "$1"
+    return $?
+}
+
+LOCAL_AGENT_EXTRA_SOCKET="$(get_gpg_socket agent-extra-socket)"
+LOCAL_SSH_SOCKET="$(get_gpg_socket agent-ssh-socket)"
+
+>&2 echo "Ensure remote sshd_config includes 'StreamLocalBindUnlink yes'"
+
+REMOTE_HOME=$(ssh "$@" 'echo $HOME')
+ssh "$@" "mkdir -p ${REMOTE_HOME}/.forwarded-sockets"
+ssh "$@" "mkdir -p ${REMOTE_HOME}/.gnupg"
+REMOTE_SSH_SOCKET="${REMOTE_HOME}/.forwarded-sockets/ssh"
+
+# Try to get gpg socket location otherwise just put with SSH socket.
+REMOTE_GPG_SOCKET=$(ssh "$@" gpgconf --list-dirs agent-socket || echo "${REMOTE_HOME}/.forwarded-sockets/gpg")
+
+ssh \
+    -R ${REMOTE_GPG_SOCKET}:${LOCAL_AGENT_EXTRA_SOCKET} \
+    -R ${REMOTE_SSH_SOCKET}:${LOCAL_SSH_SOCKET} \
+    "$@"
