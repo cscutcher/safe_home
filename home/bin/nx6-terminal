@@ -1,0 +1,6 @@
+#!/usr/bin/env bash
+set -o nounset
+set -o errexit
+set -o pipefail
+
+exec sakura --class="Terminal-emulator" -x zsh

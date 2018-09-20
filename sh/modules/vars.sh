@@ -8,3 +8,4 @@ export ENCRYPT_TO_GPG="\
     855A5FB329E1AF09! \
     4BDE762B45F30CB8!"
 export PATH="$PATH:$HOME/bin/:$HOME/.local/bin"
+export TERMINAL="nx6-terminal"
