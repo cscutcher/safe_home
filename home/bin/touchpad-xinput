@@ -1,0 +1,48 @@
+#!/usr/bin/env bash
+set -o errexit
+set -o nounset
+set -o pipefail
+
+ARGS=("$@")
+
+notify(){
+    local message="$1"
+    >&2 echo "$message"
+    if command -v notify-send &>/dev/null; then
+        notify-send -a 'Touchpad' "$1" \
+            -i /usr/share/icons/Adwaita/48x48/devices/input-touchpad.png
+    fi
+}
+
+for ID in $(xinput list --id-only); do
+    NAME="$(xinput list --name-only $ID)"
+
+    shopt -s nocasematch
+    if [[ "$NAME" == *Touch* ]]; then
+        TOUCHPAD="yes"
+    else
+        TOUCHPAD="no"
+    fi
+    shopt -u nocasematch
+
+    if [[ "$TOUCHPAD" == "yes" ]]; then
+        if [[ "${ARGS[0]}" == "--toggle" ]]; then
+            set +o errexit
+            xinput list-props $ID | \
+                grep --silent -E "^[[:space:]]*Device Enabled.*1$"
+            DEVICE_ENABLED="$?"
+            set -o errexit
+
+            if [[ "$DEVICE_ENABLED" -eq 0 ]]; then
+                xinput --disable $ID
+                notify "Touchpad $NAME disabled."
+            else
+                xinput --enable $ID
+                notify "Touchpad $NAME enabled."
+            fi
+        else
+            xinput "${ARGS[0]}" $ID "${ARGS[@]:1}"
+            notify "${NAME}: ${ARGS[*]}"
+        fi
+    fi
+done
