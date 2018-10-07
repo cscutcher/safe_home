@@ -115,3 +115,13 @@ alias fuck='eval $(thefuck $(fc -ln -1))'
 # Add ruby binaries to path
 export GEM_BIN_DIRS=(~/.gem/ruby/*/bin)
 export PATH="$PATH:${(j.:.)GEM_BIN_DIRS}"
+
+# Other keybindings
+
+# Rebind home to goto beginning of line. A habit I've not been able to break!
+bindkey -M viins "${terminfo[khome]}" beginning-of-line
+# Rebind end to goto end of line. A habit I've not been able to break!
+bindkey -M viins "${terminfo[kend]}" end-of-line
+
+# Bind ctrl-e to edit current line
+bindkey -M viins "^E" edit-command-line
