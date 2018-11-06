@@ -86,6 +86,7 @@ plugins=(
     vi-mode
     nx6_bgnotify # Notify when long running commands finish
     pipenv # Pipenv auto completion
+    history # Sync history on command execution & other useful stuff
 )
 
 # User configuration
