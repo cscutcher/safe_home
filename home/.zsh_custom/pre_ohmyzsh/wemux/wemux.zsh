@@ -31,9 +31,16 @@ function wemux_enable(){
     if [[ -z "$WEMUX_USERNAME" ]]; then
         return 1
     fi
+    if [[ -z "$1" ]]; then
+        export WEMUX_SESSION_LENGTH="$1"
+    else
+        export WEMUX_SESSION_LENGTH="3600"
+    fi
+    echo "Wemux session length $WEMUX_SESSION_LENGTH"
+
     nohup sudo -n bash -c "\
         [[ -z "$WEMUX_USERNAME" ]] && exit 1; \
-        sleep 3600; \
+        sleep $WEMUX_SESSION_LENGTH; \
         passwd -l $WEMUX_USERNAME; \
         killall --user $WEMUX_USERNAME; \
         sleep 1; \
