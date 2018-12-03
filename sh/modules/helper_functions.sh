@@ -7,3 +7,6 @@ save-command-run() {
     echo "> ${CMD[*]}" | tee "$OUTPUT_FILE"
     eval "${CMD[@]}"  2>&1 | tee -a "$OUTPUT_FILE"
 }
+
+alias log-command-output=save-command-run
+alias run-and-log=save-command-run
