@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+# Copy a markdown input (from stdin) to html output in a way that can be easily
+# pasted to rich text supporting stuff.
+set -o nounset
+set -o errexit
+
+pandoc -f markdown -t html -o - | xclip -sel clip -in -t text/html
