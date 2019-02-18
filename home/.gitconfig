@@ -25,4 +25,5 @@
 	required = true
 
 [log]
+    # Disable this for git-imerge to work
     showSignature = True
