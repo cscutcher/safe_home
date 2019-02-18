@@ -28,13 +28,14 @@ function wemux_get_password(){
 function wemux_enable(){
     wemux_update_password
     local WEMUX_USERNAME="$(wemux_get_username)"
+    sudo passwd -u "$WEMUX_USERNAME"
     if [[ -z "$WEMUX_USERNAME" ]]; then
         return 1
     fi
     if [[ -z "$1" ]]; then
-        export WEMUX_SESSION_LENGTH="$1"
-    else
         export WEMUX_SESSION_LENGTH="3600"
+    else
+        export WEMUX_SESSION_LENGTH="$1"
     fi
     echo "Wemux session length $WEMUX_SESSION_LENGTH"
 

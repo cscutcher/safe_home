@@ -1,0 +1,5 @@
+[alias]
+	hooks = !~/.githooks/bin/githooks
+
+[githooks "autoupdate"]
+	lastrun = 1550235063

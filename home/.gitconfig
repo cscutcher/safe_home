@@ -25,4 +25,13 @@
 	required = true
 
 [log]
+    # Disable this for git-imerge to work
     showSignature = True
+
+[rebase]
+    # Show commit author when doing interactive rebase
+    instructionFormat = [%an] %s
+
+[rerere]
+    # Enable replaying of merges with git rerere
+    enabled = True
