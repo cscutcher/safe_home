@@ -22,6 +22,8 @@ REMOTE_SSH_SOCKET="${REMOTE_HOME}/.forwarded-sockets/ssh"
 # Try to get gpg socket location otherwise just put with SSH socket.
 REMOTE_GPG_SOCKET=$(ssh "$@" gpgconf --list-dirs agent-socket || echo "${REMOTE_HOME}/.forwarded-sockets/gpg")
 
+echo "export SSH_AUTH_SOCK=\"${REMOTE_SSH_SOCKET}\"; export GPG_AGENT_INFO=\"${REMOTE_GPG_SOCKET}\""
+
 ssh \
     -R ${REMOTE_GPG_SOCKET}:${LOCAL_AGENT_EXTRA_SOCKET} \
     -R ${REMOTE_SSH_SOCKET}:${LOCAL_SSH_SOCKET} \
