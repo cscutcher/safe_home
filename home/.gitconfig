@@ -31,3 +31,7 @@
 [rebase]
     # Show commit author when doing interactive rebase
     instructionFormat = [%an] %s
+
+[rerere]
+    # Enable replaying of merges with git rerere
+    enabled = True
