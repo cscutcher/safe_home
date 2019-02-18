@@ -27,3 +27,7 @@
 [log]
     # Disable this for git-imerge to work
     showSignature = True
+
+[rebase]
+    # Show commit author when doing interactive rebase
+    instructionFormat = [%an] %s
