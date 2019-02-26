@@ -1,5 +1,5 @@
 [include]
 path = ~/.gitconfig.d/aliases.gitconfig
 path = ~/.gitconfig.d/colors.gitconfig
-path = ~/.gitconfig.d/tool_defaults.gitconfig
 path = ~/.gitconfig.d/githooks.gitconfig
+path = ~/.gitconfig.d/tool_defaults.gitconfig
