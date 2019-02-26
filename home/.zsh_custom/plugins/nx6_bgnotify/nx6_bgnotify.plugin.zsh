@@ -1,6 +1,7 @@
 #!/usr/bin/env zsh
 # Forked from;
 # https://github.com/robbyrussell/oh-my-zsh/blob/master/plugins/bgnotify/bgnotify.plugin.zsh
+# Synced with commit 5e1d351
 
 ## setup ##
 
@@ -46,7 +47,7 @@ bgnotify () { ## args: (title, subtitle)
   elif hash notify-send 2>/dev/null; then #ubuntu gnome!
     notify-send "$1" "$2"
   elif hash kdialog 2>/dev/null; then #ubuntu kde!
-    kdialog  -title "$1" --passivepopup  "$2" 5
+    kdialog --title "$1" --passivepopup  "$2" 5
   elif hash notifu 2>/dev/null; then #cygwyn support!
     notifu /m "$2" /p "$1"
   fi
