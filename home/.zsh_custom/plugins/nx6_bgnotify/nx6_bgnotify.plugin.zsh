@@ -9,7 +9,8 @@
 zmodload zsh/datetime || { print "can't load zsh/datetime"; return } # faster than date()
 autoload -Uz add-zsh-hook || { print "can't add zsh hook!"; return }
 
-(( ${+bgnotify_threshold} )) || bgnotify_threshold=5 #default 10 seconds
+(( ${+bgnotify_threshold} )) || bgnotify_threshold=5
+(( ${+fgnotify_threshold} )) || fgnotify_threshold=30
 
 
 ## definitions ##
@@ -19,7 +20,7 @@ if ! (type bgnotify_formatted | grep -q 'function'); then ## allow custom functi
     elapsed="$(( $3 % 60 ))s"
     (( $3 >= 60 )) && elapsed="$((( $3 % 3600) / 60 ))m $elapsed"
     (( $3 >= 3600 )) && elapsed="$(( $3 / 3600 ))h $elapsed"
-    [ $1 -eq 0 ] && bgnotify "#win (took $elapsed)" "$2" || bgnotify "#fail (took $elapsed)" "$2"
+    [ $1 -eq 0 ] && bgnotify "#win (took $elapsed)" "$2" || bgnotify "#fail [$1] (took $elapsed)" "$2"
   }
 fi
 
@@ -36,7 +37,16 @@ currentWindowId () {
 bgnotify () { ## args: (title, subtitle)
   if hash ntfy 2>/dev/null; then
     ntfy -t "$1" send "$2"
-  elif hash terminal-notifier 2>/dev/null; then #osx
+    return 0
+  fi
+
+  ## only continue if a local (non-ssh) connection
+  ## Other notification methods don't make sense on SSH
+  if ! ( [ -z "$SSH_CLIENT" ] && [ -z "$SSH_TTY" ] ) ; then
+    return 0
+  fi
+
+  if hash terminal-notifier 2>/dev/null; then #osx
     [[ "$TERM_PROGRAM" == 'iTerm.app' ]] && term_id='com.googlecode.iterm2';
     [[ "$TERM_PROGRAM" == 'Apple_Terminal' ]] && term_id='com.apple.terminal';
     ## now call terminal-notifier, (hopefully with $term_id!)
@@ -53,6 +63,23 @@ bgnotify () { ## args: (title, subtitle)
   fi
 }
 
+in_background() {
+    if [ $(currentWindowId) != "$bgnotify_windowid" ]; then
+        return 0
+    else
+        if [[ -z $TMUX ]]; then
+            return 0
+        else
+            tmux_status="$( tmux display-message -p -t $TMUX_PANE -F '#F' )"
+			if [[ "$tmux_status" == "*" ]]; then
+                return 1
+            else
+                return 0
+            fi
+        fi
+    fi
+}
+
 
 ## Zsh hooks ##
 
@@ -66,8 +93,15 @@ bgnotify_end() {
   didexit=$?
   elapsed=$(( EPOCHSECONDS - bgnotify_timestamp ))
   past_threshold=$(( elapsed >= bgnotify_threshold ))
-  if (( bgnotify_timestamp > 0 )) && (( past_threshold )); then
-    if [ $(currentWindowId) != "$bgnotify_windowid" ]; then
+  past_fg_threshold=$(( elapsed >= fgnotify_threshold ))
+
+  if in_background; then
+    if (( bgnotify_timestamp > 0 )) && (( past_threshold )); then
+      print -n "\a"
+      bgnotify_formatted "$didexit" "$bgnotify_lastcmd" "$elapsed"
+    fi
+  else
+    if (( bgnotify_timestamp > 0 )) && (( past_fg_threshold )); then
       print -n "\a"
       bgnotify_formatted "$didexit" "$bgnotify_lastcmd" "$elapsed"
     fi
@@ -75,8 +109,5 @@ bgnotify_end() {
   bgnotify_timestamp=0 #reset it to 0!
 }
 
-## only enable if a local (non-ssh) connection
-if [ -z "$SSH_CLIENT" ] && [ -z "$SSH_TTY" ]; then
-  add-zsh-hook preexec bgnotify_begin
-  add-zsh-hook precmd bgnotify_end
-fi
+add-zsh-hook preexec bgnotify_begin
+add-zsh-hook precmd bgnotify_end

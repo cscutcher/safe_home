@@ -57,7 +57,8 @@ ZSH_CUSTOM=$HOME/.zsh_custom
 DISABLE_VENV_CD=1
 
 # Threshold to notify when command completes
-bgnotify_threshold=20
+bgnotify_threshold=5
+fgnotify_threshold=30
 
 # Which plugins would you like to load? (plugins can be found in ~/.oh-my-zsh/plugins/*)
 # Custom plugins may be added to ~/.oh-my-zsh/custom/plugins/
