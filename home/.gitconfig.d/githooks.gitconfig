@@ -1,4 +1,4 @@
 [alias]
-	hooks = !~/.githooks/bin/githooks
+	hooks = !/home/cscutcher/.githooks/bin/githooks
 [githooks "autoupdate"]
-	lastrun = 1551188262
+	lastrun = 1554839053
