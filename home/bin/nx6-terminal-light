@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+set -o nounset
+set -o errexit
+set -o pipefail
+
+exec termite --class="Terminal-emulator" -c "$HOME/.config/termite/config.light" \
+    -e zsh
