@@ -2,6 +2,6 @@
 set -o nounset
 set -o errexit
 set -o pipefail
-
+export COLOR_MODE=light
 exec termite --class="Terminal-emulator" -c "$HOME/.config/termite/config.light" \
     -e zsh
