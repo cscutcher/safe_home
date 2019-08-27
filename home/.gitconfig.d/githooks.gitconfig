@@ -1,4 +1,6 @@
 [githooks "autoupdate"]
-	lastrun = 1565202349
+	lastrun = 1566902577
+[githooks]
+	installDir = /home/cscutcher/.githooks
 [alias]
 	hooks = !/home/cscutcher/.githooks/bin/githooks
