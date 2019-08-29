@@ -1,1 +1,103 @@
-git branch --merged | grep -v master | xargs --no-run-if-empty git branch -d
+#!/usr/bin/env python3
+# git branch --merged | grep -v master | xargs --no-run-if-empty git branch -d
+import collections
+import itertools
+import pathlib
+import subprocess
+
+import click
+
+BranchInfo = collections.namedtuple(
+    'BranchInfo', ['ref_name', 'worktree_path', 'branch_name'])
+
+def get_branches_iter(*args):
+    '''
+    Get branches from git
+    '''
+    output = subprocess.check_output(
+        [
+            'git', 'branch',
+            '--format=%(refname):::%(worktreepath)',
+            *args
+        ],
+        text=True,
+    )
+    def _parse_line(output_line):
+        '''
+        Parse output line from git branch
+        '''
+        output_line = output_line.strip()
+        ref_name, sep, worktree_path = output_line.partition(':::')
+        if not sep:
+            raise RuntimeError(f'Unexpected output! {output_line!r}')
+
+        ref_name = pathlib.PurePosixPath(ref_name)
+
+        if worktree_path:
+            worktree_path = pathlib.Path(worktree_path).resolve()
+        else:
+            worktree_path = None
+
+        try:
+            branch_name = str(ref_name.relative_to('refs/heads'))
+        except ValueError:
+            branch_name = None
+        return BranchInfo(
+            ref_name=ref_name,
+            worktree_path=worktree_path,
+            branch_name=branch_name)
+
+    return map(_parse_line, output.splitlines())
+
+def remove_merged(upstream_ref_name, ignore_branch=None, allow_unmerged=False):
+    '''
+    Remove branches that have been merged into refname
+    '''
+    performed_work = False
+    for ref_name, worktree_path, branch_name in get_branches_iter(
+            '--merged', upstream_ref_name):
+        if worktree_path:
+            continue
+
+        if branch_name == 'master':
+            continue
+
+        if ignore_branch and branch_name == ignore_branch:
+            continue
+
+        click.echo(f'Removing branch {branch_name}')
+        subprocess.check_call(
+            ['git', 'branch', '-D' if allow_unmerged else '-d', branch_name])
+        performed_work = True
+    return performed_work
+
+@click.command()
+def main():
+    subprocess.check_call(
+        ['git', 'fetch', 'origin', 'master'],
+        stdout=subprocess.DEVNULL,
+        stderr=subprocess.DEVNULL,
+    )
+    remove_merged('origin/master')
+
+    retry = True
+    while retry:
+        branches = [
+            branch_info for branch_info in get_branches_iter()
+            if branch_info.branch_name
+        ]
+
+        performed_work = False
+        for branch in branches:
+            performed_work = remove_merged(
+                branch.ref_name,
+                branch.branch_name,
+                allow_unmerged=True,
+            )
+            if performed_work:
+                break
+        retry = performed_work
+
+
+if __name__ == '__main__':
+    main()
