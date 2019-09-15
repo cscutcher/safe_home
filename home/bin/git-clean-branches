@@ -62,6 +62,11 @@ def remove_merged(upstream_ref_name, ignore_branch=None, allow_unmerged=False):
         if branch_name == 'master':
             continue
 
+        # I use this to create shared bases while waiting for PRs to get
+        # merged.
+        if 'BASE' in branch_name:
+            continue
+
         if ignore_branch and branch_name == ignore_branch:
             continue
 
