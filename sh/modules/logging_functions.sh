@@ -26,3 +26,10 @@ function log_error
 
     ( echo -en "${RED}ERROR: "; echo -n "$*" ; echo -en "${NO_COLOR}" ) | log_prefix_stdout
 }
+
+function log_debug
+{
+    if [ "$ENABLE_DEBUG_LOG" = true ]; then
+        log "$@"
+    fi
+}

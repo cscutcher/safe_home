@@ -8,4 +8,9 @@ fpath=($HOMESHICK_REPO/completions $fpath)
 compinit
 
 # Refresh local
-homeshick refresh
+if [ "$ENABLE_DEBUG_LOG" = false ]; then
+    QUIET_ARG="--quiet"
+else
+    QUIET_ARG=""
+fi
+homeshick refresh $QUIET_ARG

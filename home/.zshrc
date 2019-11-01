@@ -6,7 +6,7 @@ else
 fi
 
 LOG_CONTEXT="zsh"
-log "Starting zshrc"
+log_debug "Starting zshrc"
 
 # Path to your oh-my-zsh installation.
 export ZSH=$HOMESHICK_REPOS/oh-my-zsh
@@ -98,9 +98,9 @@ plugins=(
 export PATH=$HOME/bin:/usr/local/bin:$PATH
 # export MANPATH="/usr/local/man:$MANPATH"
 
-log "Looking for pre ohmyzsh scripts"
+log_debug "Looking for pre ohmyzsh scripts"
 for f in $ZSH_CUSTOM/pre_ohmyzsh/**/*.zsh(N); do
-    log "     Sourcing $f"
+    log_debug "     Sourcing $f"
     source "$f"
 done
 
@@ -109,10 +109,9 @@ source $ZSH/oh-my-zsh.sh
 # Is powerline installed
 export POWERLINE_DIR=$(python -c 'import powerline; import os.path; print(os.path.dirname(powerline.__file__))')
 if [[ $POWERLINE_DIR != "" ]]; then
-    log "Powerline installed at $POWERLINE_DIR"
-    . $POWERLINE_DIR/bindings/zsh/powerline.zsh
+    log_debug "Powerline installed at $POWERLINE_DIR"
 else
-    log "Powerline not installed. Using fallback"
+    log_error "Powerline not installed."
 fi
 
 # Fuck

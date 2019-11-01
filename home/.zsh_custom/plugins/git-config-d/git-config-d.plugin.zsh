@@ -6,7 +6,7 @@ function _list_all_git_config_d() {
 }
 
 function update_git_config_d(){
-    log "Updating git config d"
+    log_debug "Updating git config d"
     ALL_CONFIG=$(_list_all_git_config_d) || return 1
     ALL_CONFIG=${ALL_CONFIG//$HOME/\~}
     ALL_CONFIG=$(sort -u <<< "$ALL_CONFIG")

@@ -1,11 +1,11 @@
 function gpg_available(){
     # Returns success if gpg is avalable
-    log "Checking GPG"
+    log_debug "Checking GPG"
     if which gpg 2>&1 >/dev/null; then
-        log "Have GPG"
+        log_debug "Have GPG"
         return 0
     else
-        log "GPG not installed!"
+        log_error "GPG not installed!"
         return 1
     fi
 }
@@ -86,11 +86,16 @@ function start_keychain(){
         GUI_ARG=""
     fi
 
-    log "Setting up a keyring/keychain"
+    log_debug "Setting up a keyring/keychain"
     if hash keychain 2> /dev/null; then
-        log "Found keychain in path"
-
-        keychain --inherit any --agents $AGENTS $GUI_ARG
+        log_debug "Found keychain in path"
+        
+        if [ "$ENABLE_DEBUG_LOG" = false ]; then
+            KEYCHAIN_QUIET="--quiet"
+        else
+            KEYCHAIN_QUIET=""
+        fi
+        keychain $KEYCHAIN_QUIET --inherit any --agents $AGENTS $GUI_ARG
 
         if [ -n "$SSH_ARGS" ]; then
             source $HOME/.keychain/$HOSTNAME-sh
@@ -102,12 +107,12 @@ function start_keychain(){
             use_gpg_as_ssh_agent
         fi
     else
-        log "Unable to load a keyring!"
+        log_error "Unable to load a keyring!"
     fi
 }
 
 if [ -z ${SSH_AUTH_SOCK+x} ]; then
-    log "No SSH_AUTH_SOCK"
+    log_debug "No SSH_AUTH_SOCK"
 else
     log "SSH_AUTH_SOCK already exists: $SSH_AUTH_SOCK"
 fi
