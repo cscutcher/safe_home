@@ -3,4 +3,4 @@ set -o nounset
 set -o errexit
 set -o pipefail
 export COLOR_MODE=dark
-exec termite --class="Terminal-emulator" -e zsh
+exec termite --class="Terminal-emulator" -e zsh "$@"
