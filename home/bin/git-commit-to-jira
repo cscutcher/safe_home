@@ -3,24 +3,43 @@ set -o nounset
 set -o errexit
 set -o pipefail
 
-COMMIT_RANGE="${1:-HEAD}"
+COMMIT_RANGE="${1:-HEAD^..HEAD}"
 
-MARKDOWN_MESSAGE=$(git \
-    --no-pager \
-    show \
-    --no-show-signature \
-    --compact-summary \
-    --format='# %s (%h)%n_%ce_%n_%ci%_%n%n%b%n%nXXXSUMMARYXXX' \
-    "$COMMIT_RANGE")
+JIRA_MESSAGE=""
 
-MARKDOWN_MESSAGE="$MARKDOWN_MESSAGE
-XXXSUMMARYXXX"
+for commit in $(git rev-list --reverse $COMMIT_RANGE); do
+    COMMIT_MARKDOWN_MESSAGE=$(git \
+        --no-pager \
+        show $commit \
+        --no-show-signature \
+        --no-patch \
+        --format='# %s (%h)%n_%ce_%n_%ci_%n%n%b' \
+        "$commit")
 
-JIRA_MESSAGE=$( \
-    cat <<< $MARKDOWN_MESSAGE | \
-    pandoc --from=gfm --to=jira | \
-    sed 's/XXXSUMMARYXXX/{quote}/g'
+    COMMIT_SUMMARY_DIFF=$(git \
+        --no-pager \
+        show $commit \
+        --no-show-signature \
+        --compact-summary \
+        --find-renames \
+        --find-copies \
+        --format='' \
+        "$commit")
+
+    JIRA_MESSAGE="$JIRA_MESSAGE
+$( \
+    cat <<< $COMMIT_MARKDOWN_MESSAGE | \
+    pandoc --from=gfm --to=jira
 )
+
+{noformat}
+$COMMIT_SUMMARY_DIFF
+{noformat}
+"
+
+
+done
+
 
 cat <<< $JIRA_MESSAGE
 xclip -sel clip -in <<< $JIRA_MESSAGE
