@@ -1,0 +1,293 @@
+#!/usr/bin/env python3
+'''
+Script to easy manage worktrees with git
+'''
+import logging
+import tempfile
+import subprocess
+
+from pathlib import Path
+from typing import Optional
+
+import attr
+import click
+import git
+import yaml
+
+GIT_CONFIG_SECTION = 'easy-worktree'
+
+
+@attr.s(auto_attribs=True)
+class _Config:
+    default_path: str = attr.ib(default='~/git_workspaces')
+    prefix: str = attr.ib(default='')
+    pre_create: Optional[str] = attr.ib(default=None)
+    post_create: Optional[str] = attr.ib(default=None)
+    pre_remove: Optional[str] = attr.ib(default=None)
+    post_remove: Optional[str] = attr.ib(default=None)
+
+    def update(self, path: Path):
+        '''
+        Load from path
+        '''
+        with path.open() as fp:
+            config = yaml.safe_load(fp)
+
+        if not config:
+            return
+
+        for key, value in config.items():
+            if not hasattr(self, key):
+                raise Exception(f'No config {key}')
+
+            if value is not None:
+                setattr(self, key, value)
+
+        attr.validate(self)
+
+    def update_from_git_config(self, git_config: git.config.GitConfigParser):
+        '''
+        Load from git config
+        '''
+        if not git_config.has_section(GIT_CONFIG_SECTION):
+            return
+        for raw_path in git_config.get_values(GIT_CONFIG_SECTION, 'config'):
+            self.update(Path(raw_path))
+
+    def save_to(self, output_path: Path, overwrite=False):
+        '''
+        Save current config to file
+        '''
+        attr.validate(self)
+
+        if output_path.exists() and not overwrite:
+            raise Exception(f'File exists {output_path}')
+
+        output = attr.asdict(self)
+
+        with output_path.open('w') as fp:
+            yaml.dump(output, fp)
+
+    @classmethod
+    def load(cls, default_config: Path, cwd: Optional[Path] = None):
+        '''
+        Load from repo or disk
+        '''
+        inst = cls()
+
+        if default_config.exists():
+            inst.update(default_config)
+
+        if cwd is None:
+            cwd = Path.cwd()
+
+        try:
+            repo = git.Repo(cwd)
+        except git.InvalidGitRepositoryError:
+            repo = None
+
+        if repo:
+            with repo.config_reader() as git_config:
+                inst.update_from_git_config(git_config)
+        else:
+            with git.config.GitConfigParser() as git_config:
+                inst.update_from_git_config(git_config)
+
+        return inst
+
+
+@attr.s(kw_only=True, auto_attribs=True)
+class _Context:
+    click_context: click.Context = attr.ib()
+    logger: logging.Logger = attr.ib(init=False)
+    git_config: git.config.GitConfigParser = attr.ib(init=False)
+    app_dir: Path = attr.ib(init=False)
+    config: _Config = attr.ib(init=False)
+
+    @logger.default
+    def _logger_default(self):
+        return logging.getLogger(self.click_context.info_name)
+
+    @git_config.default
+    def _git_config_default(self):
+        try:
+            return git.Repo().config_reader()
+        except git.InvalidGitRepositoryError:
+            return git.config.GitConfigParser()
+
+    @app_dir.default
+    def _app_dir_default(self):
+        app_dir = Path(click.get_app_dir(self.click_context.info_name))
+        app_dir.mkdir(exist_ok=True)
+        return app_dir
+
+    @config.default
+    def _config_default(self):
+        return _Config.load(default_config=self.default_config)
+
+    @property
+    def default_config(self):
+        return self.app_dir / 'default.yaml'
+
+    def setup(self, *, log_level):
+        '''
+        Setup logging and other parts of context
+        '''
+        logging.basicConfig(level=log_level)
+        self.logger.debug(f'CLI context initialised: {self!r}')
+
+
+@click.group()
+@click.option('--log-level')
+@click.pass_context
+def cli(click_context, log_level='ERROR'):
+    '''
+    Script to easy manage worktrees with git
+    '''
+    click_context.obj = ctx = _Context(click_context=click_context)
+    ctx.setup(log_level=log_level)
+
+
+@cli.command()
+@click.pass_obj
+def show_config(ctx):
+    '''
+    Show current config for script
+    '''
+    click.echo(str(ctx.config))
+
+
+def get_all_git_config(*, key: str):
+    '''
+    Get all from git config
+    '''
+    git_config_get_args = ['git', 'config', '--get-all', key]
+
+    result = subprocess.run(
+        git_config_get_args, capture_output=True, text=True
+    )
+    if result.returncode == 1:
+        return []
+
+    result.check_returncode()
+
+    return [line.strip() for line in result.stdout.splitlines()]
+
+
+def set_git_config(
+    *, level: str, key: str, value: str, overwrite: bool = False
+):
+    '''
+    Set git config but avoid overwriting unless overwrite is True
+    '''
+    if level == 'repo':
+        git_config_location_flag = '--local'
+    elif level == 'worktree':
+        git_config_location_flag = '--worktree'
+    else:
+        raise Exception(f'Invalid level {level = }')
+
+    if not overwrite:
+        git_config_get_args = [
+            'git',
+            'config',
+            git_config_location_flag,
+            '--get',
+            key,
+        ]
+
+        result = subprocess.run(
+            git_config_get_args, capture_output=True, text=True
+        )
+        if result.returncode != 1:
+            raise Exception(f'{key!r} already exists in git config')
+
+    git_config_set_args = [
+        'git',
+        'config',
+        git_config_location_flag,
+        key,
+        value,
+    ]
+    subprocess.run(
+        git_config_set_args, capture_output=True, check=True, text=True
+    )
+
+
+@cli.command()
+@click.option(
+    '--level', type=click.Choice(('default', 'repo', 'worktree')), default=None
+)
+@click.pass_obj
+def create_config(ctx, level):
+    '''
+    Create config in nearest config context
+    '''
+    try:
+        repo = git.Repo()
+    except git.InvalidGitRepositoryError:
+        repo = None
+
+    if level is None:
+        if repo:
+            level = 'repo'
+        else:
+            level = 'default'
+
+    new_config = _Config()
+
+    if level == 'default':
+        new_config.save_to(ctx.default_config)
+        return
+
+    if repo:
+        prefix = Path(repo.working_dir).name + '-'
+    else:
+        prefix = ''
+
+    _os_handle, raw_path = tempfile.mkstemp(
+        prefix=prefix, suffix=f'-{level}.yaml', dir=ctx.app_dir
+    )
+    save_location = Path(raw_path)
+
+    new_config.save_to(save_location, overwrite=True)
+
+    try:
+        set_git_config(
+            level=level, key='easy-worktree.config', value=str(save_location)
+        )
+    except Exception:
+        ctx.logger.exception('Failed to set git config')
+        save_location.unlink()
+        raise
+
+
+@cli.command()
+@click.pass_obj
+def edit_config(ctx):
+    '''
+    Edit config
+    '''
+    configs = [
+        ctx.default_config,
+    ]
+
+    got_from_git = False
+    configs.extend(get_all_git_config(key='easy-worktree.config'))
+
+    configs = [c for c in configs if Path(c).exists()]
+
+    click.echo('Found configs:')
+    for idx, config in enumerate(configs):
+        click.echo(f'[{idx}] {config}')
+
+    selected = click.prompt(
+        'Which config to edit?',
+        type=click.IntRange(min=0, max=len(configs) - 1),
+    )
+
+    click.edit(filename=configs[selected])
+
+
+if __name__ == '__main__':
+    cli()
