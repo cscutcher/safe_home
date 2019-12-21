@@ -11,6 +11,10 @@ log_debug "Starting zshrc"
 # Path to your oh-my-zsh installation.
 export ZSH=$HOMESHICK_REPOS/oh-my-zsh
 
+# zplug
+# See https://github.com/zplug/zplug
+export ZPLUG_HOME=$HOMESHICK_REPOS/zplug
+source "${ZPLUG_HOME}/init.zsh"
 
 # Set name of the theme to load.
 # Look in ~/.oh-my-zsh/themes/
@@ -93,6 +97,19 @@ plugins=(
     pipenv # Pipenv auto completion
     history # Sync history on command execution & other useful stuff
 )
+
+# Zplug plugins
+# See https://github.com/zplug/zplug
+zplug "Tarrasch/zsh-autoenv"
+
+# zplug check returns true if all packages are installed
+# Therefore, when it returns false, run zplug install
+if ! zplug check; then
+    zplug install
+fi
+
+# source plugins and add commands to the PATH
+zplug load
 
 # User configuration
 export PATH=$HOME/bin:/usr/local/bin:$PATH
