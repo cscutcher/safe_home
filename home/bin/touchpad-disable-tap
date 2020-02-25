@@ -7,3 +7,6 @@ touchpad-xinput set-prop "Synaptics Tap Action" 0
 synclient TapButton1=0
 synclient TapButton2=0
 synclient TapButton3=0
+
+# Disable middle mouse
+touchpad-xinput --set-button-map 1 1 3
