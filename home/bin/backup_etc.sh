@@ -28,7 +28,6 @@ gpg --encrypt \
     --auto-key-retrieve \
     --recipient 2351AD620C3D83F2A5A562E17B8C6179AA1CD475 \
     --recipient 855A5FB329E1AF09! \
-    --recipient 4BDE762B45F30CB8! \
     --recipient 0AD8CAA3C0A22D938C8324260642A14A3E26BC70 \
     "$BUNDLE_OUTPUT"
 
