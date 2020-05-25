@@ -55,31 +55,54 @@ scrollbar = off
 # If unset, will reverse foreground and background
 #highlight = #2f2f2f
 
-# For paper
-foreground              = #4D4D4C
-background              = #EEEEEE
-cursor                  = #7e705a
-color0  = #EDEDED
-color1  = #D7005F
-color2  = #90a959
-color3  = #D75F00
-color4  = #4271AE
-color5  = #8959A8
-color6  = #3E999F
-color7  = #4D4D4C
-color8  = #969694
-color9  = #D7005F	#RED
-color10 = #718C00	#GREEN
-color11 = #D75F00	#ORANGE/YELLOW
-color12 = #4271AE	#BLUE
-color13 = #8959A8	#MAGENTA
-color14 = #3E999F	#CYAN
-color15 = #4D4D4C
-color16 = #d28b71
-color17 = #bb9584
-color18 = #534636
-color19 = #645240
-color20 = #b8afad
+# Base16 PaperColor Light
+# Author: Jon Leopard (http://github.com/jonleopard) based on PaperColor Theme (https://github.com/NLKNguyen/papercolor-theme)
+
+foreground          = #878787
+foreground_bold     = #878787
+cursor              = #878787
+cursor_foreground   = #eeeeee
+background          = #eeeeee
+
+# 16 color space
+
+# Black, Gray, Silver, White
+color0  = #eeeeee
+color8  = #5f8700
+color7  = #878787
+color15 = #444444
+
+# Red
+color1  = #bcbcbc
+color9  = #bcbcbc
+
+# Green
+color2  = #8700af
+color10 = #8700af
+
+# Yellow
+color3  = #d70087
+color11 = #d70087
+
+# Blue
+color4  = #d75f00
+color12 = #d75f00
+
+# Purple
+color5  = #005faf
+color13 = #005faf
+
+# Teal
+color6  = #d75f00
+color14 = #d75f00
+
+# Extra colors
+color16 = #d70000
+color17 = #005f87
+color18 = #af0000
+color19 = #008700
+color20 = #0087af
+color21 = #005f87
 
 
 [hints]
