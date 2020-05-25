@@ -1,3 +1,10 @@
+# Enable Powerlevel10k instant prompt. Should stay close to the top of ~/.zshrc.
+# Initialization code that may require console input (password prompts, [y/n]
+# confirmations, etc.) must go above this block; everything else may go below.
+if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]; then
+  source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
+fi
+
 HOMESHICK_MAIN_RC="$HOME/.homesick/repos/safe_home/sh/rc.sh"
 if [ -e $HOMESHICK_MAIN_RC ]; then
     emulate sh -c 'source $HOMESHICK_MAIN_RC'
@@ -20,7 +27,8 @@ source "${ZPLUG_HOME}/init.zsh"
 # Look in ~/.oh-my-zsh/themes/
 # Optionally, if you set this to "random", it'll load a random theme each
 # time that oh-my-zsh is loaded.
-ZSH_THEME="powerlevel9k/powerlevel9k"
+ZSH_THEME="powerlevel10k/powerlevel10k"
+
 POWERLEVEL9K_COLOR_SCHEME='light'
 POWERLEVEL9K_LEFT_PROMPT_ELEMENTS=(context virtualenv dir dir_writable vi_mode root_indicator)
 POWERLEVEL9K_RIGHT_PROMPT_ELEMENTS=(vcs status background_jobs history time)
@@ -147,3 +155,6 @@ bindkey -M viins "${terminfo[kend]}" end-of-line
 
 # Bind ctrl-e to edit current line
 bindkey -M viins "^E" edit-command-line
+
+# To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
+[[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
