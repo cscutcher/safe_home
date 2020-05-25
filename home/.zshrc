@@ -104,11 +104,13 @@ plugins=(
     nx6_bgnotify # Notify when long running commands finish
     pipenv # Pipenv auto completion
     history # Sync history on command execution & other useful stuff
+    direnv # Like auotenv only better
 )
 
 # Zplug plugins
 # See https://github.com/zplug/zplug
-zplug "Tarrasch/zsh-autoenv"
+# For example since direnv supersedes it
+# zplug "Tarrasch/zsh-autoenv"
 
 # zplug check returns true if all packages are installed
 # Therefore, when it returns false, run zplug install
