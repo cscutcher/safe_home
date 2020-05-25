@@ -7,5 +7,9 @@ function check_packages(){
     done
 }
 
+if ! [[ -d ~/.homesick/repos/powerlevel10k ]]; then
+    log_error pacman -Q "Missing powerlevel10k repo in homesick"
+fi
+
 check_packages \
     nerd-fonts-meslo
