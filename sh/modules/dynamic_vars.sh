@@ -7,7 +7,7 @@ export PATH="$PATH:$HOME/bin/:$HOME/bin/$HOSTNAME:$HOME/.local/bin"
 if [ -x "$HOME/bin/get_dropbox_folder.sh" ] ; then
     export DROPBOX=$($HOME/bin/get_dropbox_folder.sh)
 else
-    log_error "Couldn't attempt discovery of dropbox folder"
+    log_debug "Couldn't attempt discovery of dropbox folder"
 fi
 
 #Try and find boxcryptor
@@ -17,6 +17,6 @@ if [ $DROPBOX ] ; then
         export BOXCRYPTOR_SRC
         export BOXCRYPTOR="$HOME/BoxCryptor"
     else
-        log_error "Couldn't discover Boxcryptor"
+        log_debug "Couldn't discover Boxcryptor"
     fi
 fi

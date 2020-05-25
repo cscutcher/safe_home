@@ -114,6 +114,6 @@ function start_keychain(){
 if [ -z ${SSH_AUTH_SOCK+x} ]; then
     log_debug "No SSH_AUTH_SOCK"
 else
-    log "SSH_AUTH_SOCK already exists: $SSH_AUTH_SOCK"
+    log_debug "SSH_AUTH_SOCK already exists: $SSH_AUTH_SOCK"
 fi
 start_keychain
