@@ -1,5 +1,7 @@
 [githooks "autoupdate"]
-	lastrun = 1582556758
+	lastrun = 1590416097
+	updateCloneUrl = https://github.com/rycus86/githooks.git
+	updateCloneBranch = master
 [githooks]
 	installDir = /home/cscutcher/.githooks
 [alias]
