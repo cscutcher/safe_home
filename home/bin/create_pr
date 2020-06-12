@@ -1,0 +1,41 @@
+#!/usr/bin/env zsh
+setopt ERR_RETURN
+set -o nounset
+set -o pipefail
+
+
+generate_message_file() {
+    local MESSAGE_FILE="$1"
+
+    git fetch origin master
+
+    git rev-parse --abbrev-ref HEAD >> "$MESSAGE_FILE"
+    echo "" >> "$MESSAGE_FILE"
+
+    git log --reverse --no-show-signature \
+        --pretty="format:# %s%n%h - %ae%n%n%b" \
+        HEAD ^FETCH_HEAD >> "$MESSAGE_FILE"
+
+    true
+    return
+}
+
+create_pr() {
+    local MESSAGE_FILE="$1"
+    hub pull-request -F "$MESSAGE_FILE" --edit --draft --browse
+
+    true
+    return
+}
+
+PR_OUTPUT="$(mktemp)"
+
+if generate_message_file "$PR_OUTPUT" && create_pr "$PR_OUTPUT"; then
+    RESULT=true
+else
+    RESULT=false
+fi
+
+rm "$PR_OUTPUT"
+
+exit $RESULT
