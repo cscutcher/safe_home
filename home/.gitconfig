@@ -18,6 +18,11 @@
 [merge]
     renamelimit = 2000
 
+[fetch]
+    # When fetching, fetch N in parallel. If 0 choose "sensible default". 
+    # Defaults to 1 otherwise.
+    parallel = 0
+
 [filter "lfs"]
 	clean = git-lfs clean -- %f
 	smudge = git-lfs smudge -- %f
