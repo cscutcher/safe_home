@@ -112,8 +112,10 @@ plugins=(
 
 # Zplug plugins
 # See https://github.com/zplug/zplug
-# For example since direnv supersedes it
-# zplug "Tarrasch/zsh-autoenv"
+# zsh-autoenv overlaps a little with direnv.
+# direnv has the advantage of being more secure and with a few more
+# features, but zsh-autoenv is a little more flexible.
+zplug "Tarrasch/zsh-autoenv"
 
 # zplug check returns true if all packages are installed
 # Therefore, when it returns false, run zplug install
