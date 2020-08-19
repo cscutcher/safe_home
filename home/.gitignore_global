@@ -2,4 +2,5 @@
 *.swo
 *.pyc
 *.envrc
-.direnv/
+*.direnv/
+*.autoenv.zsh
