@@ -1,0 +1,88 @@
+#!/usr/bin/env python
+import argparse
+import json
+import os
+import sys
+import subprocess
+import shlex
+
+from pathlib import Path
+
+import tmuxp.cli
+
+ENCODED_ARG_KEY = 'ENC_EDITOR_ARGS'
+
+
+def gui(ctx):
+    '''
+    Run editor in default terminal
+    '''
+    if ENCODED_ARG_KEY not in os.environ:
+        os.environ[ENCODED_ARG_KEY] = json.dumps(ctx.args)
+    terminal_cmd = (Path.home() / 'bin/nx6-terminal').resolve()
+    editor_cmd = shlex.join((
+        __file__,
+        'edit',
+    ))
+
+    subprocess.run(
+        (str(terminal_cmd), f'--exec={editor_cmd}'),
+        check=True
+    )
+
+
+def edit(ctx):
+    '''
+    Run tmuxp with wrapped arguments
+    '''
+    if ENCODED_ARG_KEY not in os.environ:
+        os.environ[ENCODED_ARG_KEY] = json.dumps(ctx.args)
+
+    tmuxp.cli.load_workspace(
+        config_file=str((Path.home() / '.tmuxp/editor.yaml').resolve())
+    )
+
+
+def inner(ctx):
+    '''
+    Unwrap arguments and run nvim
+    '''
+    args = json.loads(os.environ[ENCODED_ARG_KEY])
+    editor_cmd = os.environ.get('EDITOR', 'nvim')
+    subprocess.run(
+        (editor_cmd, *args),
+        check=True,
+    )
+
+
+def main():
+    '''
+    Wrap args and start tmuxp
+    '''
+    parser = argparse.ArgumentParser()
+    subparsers = parser.add_subparsers(help='sub-command help')
+
+    edit_parser = subparsers.add_parser('edit')
+    edit_parser.add_argument(
+        'args',
+        nargs='*'
+    )
+
+    edit_parser.set_defaults(func=edit)
+
+    inner_parser = subparsers.add_parser('inner')
+    inner_parser.set_defaults(func=inner)
+
+    gui_parser = subparsers.add_parser('gui')
+    gui_parser.set_defaults(func=gui)
+    gui_parser.add_argument(
+        'args',
+        nargs='*'
+    )
+
+    ctx = parser.parse_args()
+
+    ctx.func(ctx)
+
+if __name__ == '__main__':
+    main()
