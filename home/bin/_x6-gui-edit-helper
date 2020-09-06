@@ -19,10 +19,11 @@ def gui(ctx):
     '''
     if ENCODED_ARG_KEY not in os.environ:
         os.environ[ENCODED_ARG_KEY] = json.dumps(ctx.args)
+    use_tmux = os.environ.get('USE_TMUX', 'true').lower() == 'true'
     terminal_cmd = (Path.home() / 'bin/nx6-terminal').resolve()
     editor_cmd = shlex.join((
         __file__,
-        'edit',
+        'edit' if use_tmux else 'inner',
     ))
 
     subprocess.run(
